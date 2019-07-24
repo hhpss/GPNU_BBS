@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gpnu.bbs.mapper.ArticleMapper" >
+  <resultMap id="BaseResultMap" type="com.gpnu.bbs.model.Article" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="c_id" property="c_id" jdbcType="INTEGER" />
+    <result column="u_id" property="u_id" jdbcType="INTEGER" />
+    <result column="publish_date" property="publish_date" jdbcType="TIMESTAMP" />
+    <result column="edit_time" property="edit_time" jdbcType="TIMESTAMP" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="pageview" property="pageview" jdbcType="INTEGER" />
+    <result column="md_content" property="md_content" jdbcType="LONGVARCHAR" />
+    <result column="html_content" property="html_content" jdbcType="LONGVARCHAR" />
+    <result column="summary" property="summary" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from article
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.gpnu.bbs.model.Article" useGeneratedKeys="true" keyProperty="id" >
+    insert into article (title, c_id, u_id, 
+      publish_date, edit_time, state, 
+      pageview, md_content, html_content, 
+      summary)
+    values (#{title,jdbcType=VARCHAR}, #{c_id,jdbcType=INTEGER}, #{u_id,jdbcType=INTEGER}, 
+      #{publish_date,jdbcType=TIMESTAMP}, #{edit_time,jdbcType=TIMESTAMP}, #{state,jdbcType=INTEGER}, 
+      #{pageview,jdbcType=INTEGER}, #{md_content,jdbcType=LONGVARCHAR}, #{html_content,jdbcType=LONGVARCHAR}, 
+      #{summary,jdbcType=LONGVARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.gpnu.bbs.model.Article" >
+    update article
+    set title = #{title,jdbcType=VARCHAR},
+      c_id = #{c_id,jdbcType=INTEGER},
+      u_id = #{u_id,jdbcType=INTEGER},
+      publish_date = #{publish_date,jdbcType=TIMESTAMP},
+      edit_time = #{edit_time,jdbcType=TIMESTAMP},
+      state = #{state,jdbcType=INTEGER},
+      pageview = #{pageview,jdbcType=INTEGER},
+      md_content = #{md_content,jdbcType=LONGVARCHAR},
+      html_content = #{html_content,jdbcType=LONGVARCHAR},
+      summary = #{summary,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, title, c_id, u_id, publish_date, edit_time, state, pageview, md_content, 
+    html_content, summary
+    from article
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, title, c_id, u_id, publish_date, edit_time, state, pageview, md_content, 
+    html_content, summary
+    from article
+  </select>
+</mapper>

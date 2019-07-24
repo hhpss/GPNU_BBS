@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE generatorConfiguration
         PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
-        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+                "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <!-- 配置生成器 -->
 <generatorConfiguration>
     <context id="mysql" defaultModelType="hierarchical" targetRuntime="MyBatis3Simple">
@@ -61,7 +61,7 @@
                 value=""/> -->
         </javaClientGenerator>
 
-        <table tableName="user" domainObjectName="User" >
+        <table tableName="comment" domainObjectName="Comment" >
             <property name="useActualColumnNames" value="true" />
             <!-- 参考 javaModelGenerator 的 constructorBased属性 -->
             <property name="constructorBased" value="false"/>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gpnu.bbs.mapper.CommentMapper" >
+  <resultMap id="BaseResultMap" type="com.gpnu.bbs.model.Comment" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="a_id" property="a_id" jdbcType="INTEGER" />
+    <result column="publish_date" property="publish_date" jdbcType="TIMESTAMP" />
+    <result column="parent_id" property="parent_id" jdbcType="INTEGER" />
+    <result column="u_id" property="u_id" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from comment
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.gpnu.bbs.model.Comment" useGeneratedKeys="true" keyProperty="id" >
+    insert into comment (a_id, publish_date, parent_id, 
+      u_id, content)
+    values (#{a_id,jdbcType=INTEGER}, #{publish_date,jdbcType=TIMESTAMP}, #{parent_id,jdbcType=INTEGER}, 
+      #{u_id,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.gpnu.bbs.model.Comment" >
+    update comment
+    set a_id = #{a_id,jdbcType=INTEGER},
+      publish_date = #{publish_date,jdbcType=TIMESTAMP},
+      parent_id = #{parent_id,jdbcType=INTEGER},
+      u_id = #{u_id,jdbcType=INTEGER},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, a_id, publish_date, parent_id, u_id, content
+    from comment
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, a_id, publish_date, parent_id, u_id, content
+    from comment
+  </select>
+</mapper>
