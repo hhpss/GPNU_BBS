@@ -1,6 +1,8 @@
 package com.gpnu.bbs.service.impl;
 
+import com.gpnu.bbs.mapper.CommentMapper;
 import com.gpnu.bbs.mapper.UserMapper;
+import com.gpnu.bbs.model.Comment;
 import com.gpnu.bbs.model.HostHolder;
 import com.gpnu.bbs.model.User;
 import com.gpnu.bbs.service.UserService;
@@ -36,6 +38,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private CommentMapper commentMapper;
+
     @PostConstruct
     private void init(){
         redisTemplate.setKeySerializer(StringRedisSerializer.UTF_8);
@@ -44,17 +49,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public String createTicket(String key){
         String ticket = UUID.randomUUID().toString().replace("-","");
-        string.set(key,"ticket");
+        string.set(key,ticket);
         redisTemplate.expire(key,3, TimeUnit.DAYS);
         return ticket;
     }
 
-
-
     @Override
     public User login(String email, String password) {
         String pwd = MD5Util.md5(password+MD5Util.salt);
-        System.out.println(pwd);
+        //System.out.println(pwd);
         User u = userMapper.selectByEmailAndPassword(email,pwd);
         return u;
     }
@@ -71,6 +74,25 @@ public class UserServiceImpl implements UserService {
         userMapper.insert(user);
         System.out.println(user);
         return user;
+    }
+
+    @Override
+    public User updateUserInfo(User user) {
+        User u = hostHolder.getUser();
+        user.setId(u.getId());
+        user.setPassword(MD5Util.md5(user.getPassword()+MD5Util.salt));
+        user.setEmail(u.getEmail());
+        user.setReg_date(u.getReg_date());
+        userMapper.updateByPrimaryKey(user);
+        return user;
+    }
+
+    @Override
+    public Comment doComment(Comment comment) {
+        comment.setPublish_date(new Date());
+        comment.setU_id(hostHolder.getUser().getId());
+        commentMapper.insert(comment);
+        return comment;
     }
 
 }

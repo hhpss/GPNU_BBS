@@ -47,11 +47,14 @@ public class PassportInterceptor implements HandlerInterceptor {
             }
         }
         if (ticket != null){    //判断user的ticket是否一致及有效期
-            User u = (User) request.getAttribute("user");
-            String key = User.getTicketKey(u.getId());
+            int id = Integer.parseInt(request.getParameter("id"));
+           // System.out.println(id);
+            String key = User.getTicketKey(id);
+            //System.out.println("ticket: "+ticket);
             if(redisTemplate.hasKey(key)){
                 if (ticket.equals(string.get(key))){
-                    User user = userMapper.selectByPrimaryKey(u.getId());
+                    //System.out.println("Redis ticket: "+string.get(key));
+                    User user = userMapper.selectByPrimaryKey(id);
                     redisTemplate.expire(key,3, TimeUnit.DAYS);
                     hostHolder.setUser(user);
                     return true;

@@ -5,6 +5,7 @@ import com.gpnu.bbs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -28,10 +29,15 @@ public class LoginController {
         if(user != null){
             result.put("success",true);
             result.put("user",user);
+
+
             String ticket = userService.createTicket(User.getTicketKey(user.getId()));
             Cookie cookie = new Cookie("ticket",ticket);
+            //在Postman中调试
+            result.put("cookie",cookie);
             cookie.setPath("/");
             response.addCookie(cookie);
+            System.out.println(cookie);
         }else{
             result.put("success",false);
             result.put("msg","email或者password错误！");
