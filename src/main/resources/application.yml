@@ -22,8 +22,13 @@ spring:
     password: root
     url: jdbc:mysql://localhost:3306/gpnu_bbs?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
     driver-class-name: com.mysql.jdbc.Driver
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
 
 mybatis:
   config-location: classpath:mybatis/config/mybatis-config.xml
   mapper-locations: classpath:mybatis/mapper/*.xml
   type-aliases-package: com.gpnu.bbs.model
+
