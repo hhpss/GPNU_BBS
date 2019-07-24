@@ -1,0 +1,29 @@
+server:
+  port: 8080
+
+spring:
+  redis:
+    jedis:
+      pool:
+        max-active: 10
+    host: localhost
+    port: 6379
+    database: 1
+    timeout: 5000
+  freemarker:
+    template-loader-path: classpath:/templates/
+    suffix: .ftl
+    content-type: text/html
+    charset: UTF-8
+    settings:
+      number_format: '0.##'
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://localhost:3306/gpnu_bbs?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    driver-class-name: com.mysql.jdbc.Driver
+
+mybatis:
+  config-location: classpath:mybatis/config/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  type-aliases-package: com.gpnu.bbs.model
