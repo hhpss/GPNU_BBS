@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,12 +22,16 @@ public class LoginController {
     private UserService userService;
 
     @PostMapping("/login")
-    public Map login(String email, String password){
+    public Map login(String email, String password, HttpServletResponse response){
         Map<String,Object> result = new HashMap<>();
         User user = userService.login(email,password);
         if(user != null){
             result.put("success",true);
             result.put("user",user);
+            String ticket = userService.createTicket(User.getTicketKey(user.getId()));
+            Cookie cookie = new Cookie("ticket",ticket);
+            cookie.setPath("/");
+            response.addCookie(cookie);
         }else{
             result.put("success",false);
             result.put("msg","email或者password错误！");

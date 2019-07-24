@@ -18,7 +18,7 @@ public class UploadFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest req = (HttpServletRequest) servletRequest;
+       /* HttpServletRequest req = (HttpServletRequest) servletRequest;
         String uri = req.getRequestURI();
         //System.out.println(uri);
         //System.out.println("filter method");
@@ -28,7 +28,7 @@ public class UploadFilter implements Filter {
             servletResponse.getOutputStream().write(FileUtils.readFileToByteArray(f));
         }else {
             filterChain.doFilter(servletRequest,servletResponse);
-        }
+        }*/
     }
 
     @Override
