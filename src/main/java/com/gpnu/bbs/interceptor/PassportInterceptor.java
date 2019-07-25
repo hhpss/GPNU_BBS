@@ -4,6 +4,7 @@ import com.gpnu.bbs.mapper.UserMapper;
 import com.gpnu.bbs.model.HostHolder;
 import com.gpnu.bbs.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
@@ -31,6 +32,10 @@ public class PassportInterceptor implements HandlerInterceptor {
     @Resource(name = "redisTemplate")
     private ValueOperations string;
 
+    @Resource(name = "redisTemplate")
+    private HashOperations<String,String,User> hash;
+
+
     @Autowired
     private HostHolder hostHolder;
 
@@ -38,24 +43,27 @@ public class PassportInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         System.out.println("preHandle: -------------------------------");
         String ticket = null;
+        Cookie c = null;
         if(request.getCookies()!=null){
             for(Cookie cookie: request.getCookies()){
                 if(cookie.getName().equals("ticket")){
                     ticket = cookie.getValue();
+                    c = cookie;
                     break;
                 }
             }
         }
         if (ticket != null){    //判断user的ticket是否一致及有效期
-            int id = Integer.parseInt(request.getParameter("id"));
+           // int id = Integer.parseInt(request.getParameter("id"));
            // System.out.println(id);
-            String key = User.getTicketKey(id);
-            //System.out.println("ticket: "+ticket);
-            if(redisTemplate.hasKey(key)){
-                if (ticket.equals(string.get(key))){
+            if(redisTemplate.opsForHash().hasKey("user",ticket)) {
+                User user = hash.get("user", ticket);
+                String ticketKey = User.getTicketKey(user.getId());
+                if (ticket.equals(string.get(ticketKey))) {
                     //System.out.println("Redis ticket: "+string.get(key));
-                    User user = userMapper.selectByPrimaryKey(id);
-                    redisTemplate.expire(key,3, TimeUnit.DAYS);
+                    //User user = hash.get("user", ticket);
+                    redisTemplate.expire(ticketKey, 3, TimeUnit.DAYS);
+                    c.setMaxAge(redisTemplate.getExpire(ticketKey).intValue());
                     hostHolder.setUser(user);
                     return true;
                 }

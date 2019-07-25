@@ -1,5 +1,6 @@
 package com.gpnu.bbs.controller;
 
+import com.gpnu.bbs.model.HostHolder;
 import com.gpnu.bbs.model.User;
 import com.gpnu.bbs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ import java.util.Map;
 public class LoginController {
 
     @Autowired
+    private HostHolder hostHolder;
+
+    @Autowired
     private UserService userService;
 
     @PostMapping("/login")
@@ -27,12 +31,12 @@ public class LoginController {
         Map<String,Object> result = new HashMap<>();
         User user = userService.login(email,password);
         if(user != null){
+            hostHolder.setUser(user);
             result.put("success",true);
             result.put("user",user);
-
-
             String ticket = userService.createTicket(User.getTicketKey(user.getId()));
             Cookie cookie = new Cookie("ticket",ticket);
+            cookie.setMaxAge(userService.getTicketExpried(User.getTicketKey(user.getId())));
             //在Postman中调试
             result.put("cookie",cookie);
             cookie.setPath("/");

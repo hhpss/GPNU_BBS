@@ -7,10 +7,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 import java.util.Date;
 
 @ToString
-public class User {
+public class User implements Serializable {
     private Integer id;
 
     @Length(min = 1, max = 20, message = "password 长度必须在 {min} - {max} 之间")

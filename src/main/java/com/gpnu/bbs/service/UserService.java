@@ -13,4 +13,5 @@ public interface UserService {
     User regist(User user);
     User updateUserInfo(User user);
     Comment doComment(Comment comment);
+    int getTicketExpried(String key);
 }

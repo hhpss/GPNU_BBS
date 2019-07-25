@@ -8,6 +8,7 @@ import com.gpnu.bbs.model.User;
 import com.gpnu.bbs.service.UserService;
 import com.gpnu.bbs.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -32,6 +33,9 @@ public class UserServiceImpl implements UserService {
     @Resource(name = "redisTemplate")
     private ValueOperations string;
 
+    @Resource(name = "redisTemplate")
+    private HashOperations<String,String,User> hash;
+
     @Autowired
     private HostHolder hostHolder;
 
@@ -48,11 +52,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String createTicket(String key){
+        User user = hostHolder.getUser();
         String ticket = UUID.randomUUID().toString().replace("-","");
         string.set(key,ticket);
+        hash.put("user",ticket,user);
         redisTemplate.expire(key,3, TimeUnit.DAYS);
         return ticket;
     }
+
+
 
     @Override
     public User login(String email, String password) {
@@ -93,6 +101,13 @@ public class UserServiceImpl implements UserService {
         comment.setU_id(hostHolder.getUser().getId());
         commentMapper.insert(comment);
         return comment;
+    }
+
+    @Override
+    public int getTicketExpried(String key) {
+        int time = redisTemplate.getExpire(key).intValue();
+        //redisTemplate.expire(key,3, TimeUnit.DAYS);
+        return time;
     }
 
 }
